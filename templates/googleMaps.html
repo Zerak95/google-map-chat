@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <title>Simple Map</title>
+
+        <meta name="viewport" content="initial-scale=1.0">
+
+        <meta charset="utf-8">
+
+        <style>
+            /* Always set the map height explicitly to define the size of the div
+            * element that contains the map. */
+            #map {
+                height: 400px;
+                width: 100%;
+            }
+
+            /* Optional: Makes the sample page fill the window. */
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <h1>my google maps</h1>
+        <div id="map"></div>
+
+        
+        <div>The country is: <span id="country"></span></div> <div></div>
+        <a href='index.html'><button >Submit</button></a>
+
+        <script>
+            var map;
+
+            function initMap() {
+                
+                var coordinatesCenterScreen = {
+                    lat:30.0626,
+                    lng:31.2497
+                }
+
+                //map initialization 
+                map = new google.maps.Map(document.getElementById('map'), {
+                center: coordinatesCenterScreen,
+                zoom: 3
+                });
+
+                var marker = new google.maps.Marker({
+                    position: coordinatesCenterScreen,
+                    map:map
+                });
+    
+                google.maps.event.addListener(map, 'click', function(event){
+                    marker.setPosition(event.latLng)
+
+                    geocodeLatLng(event.latLng);
+                });
+            }
+            
+            
+            function geocodeLatLng(latLng){
+                var geocoder = new google.maps.Geocoder;
+                geocoder.geocode(
+                    {'location': latLng},
+                    function(results, status){
+                        if (status === 'OK'){
+                            if (results[0]) {
+                                var locationData = addressComponent(results[0]);
+                                document.getElementById('country').innerHTML = locationData.country;
+                                // console.log("The country at this location is: " + country);
+                                console.log(locationData.country);
+                                console.log(locationData.state);
+                                // console.log(results[0].address_components[3].long_name);
+
+
+                                var locationArea;
+                                if(locationData.state == 'South Australia'){
+                                    console.log('this is a state');
+                                }else if(locationData.state == 'Victoria'){
+                                    console.log('this is a state');
+                                }else if(locationData.state == 'New South Wales'){
+                                    console.log('this is a state');
+                                }else if(locationData.state == 'Queensland'){
+                                    console.log('this is a state');
+                                }else if(locationData.state == 'Western Australia'){
+                                    console.log('this is a state');
+                                }else if(locationData.state == 'Northern Territory'){
+                                    console.log('this is a state');
+                                }else if(locationData.state == 'Tasmania'){
+                                    console.log('this is a state');
+                                }else{
+                                    console.log('!!!!!! this is not a state');
+                                }
+
+
+                            }else{
+                                console.log('no result');
+                            }
+                        }else{
+                            console.log("geocoder failed due to: " + status);
+                        }
+                    });
+            }
+
+            function addressComponent(location){
+                var addressComponent = location.address_components;
+                var components = {};
+                for(var i = 0; i < addressComponent.length; i++){
+                    if(addressComponent[i].types.includes("country")){
+                        components.country = addressComponent[i].long_name;
+                    }
+                    
+                    if(addressComponent[i].types.includes("administrative_area_level_1")){
+                        components.state = addressComponent[i].long_name;
+                    }
+
+                }
+                return components;
+            }
+
+
+
+                
+
+        </script>
+    
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCANrKuSXgrgkyXn2K7RLmqMve5oW89yh4&callback=initMap" async defer>    
+        </script>
+
+    </body>
+
+</html>
